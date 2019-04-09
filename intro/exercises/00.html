@@ -3,3 +3,16 @@
 <!-- 🐨 Then create a <script> and create a div (💰 document.createElement('div')) -->
 <!-- 🐨 Set the div's textContent to 'Hello World' and className to 'container' -->
 <!-- 🐨 Append the div to the root div using `appendChild` -->
+
+<body>
+  <div id="root">
+
+  </div>
+  <script type="text/javascript">
+    const root = document.getElementById("root");
+    const elem = document.createElement('div');
+    elem.textContent = "Hello World";
+    elem.className = "container";
+    root.appendChild(elem);
+  </script>
+</body>

@@ -5,10 +5,21 @@
   <script src="../react-dom.development.js"></script>
   <script src="../babel.js"></script>
   <script type="text/babel">
+    function Greeting({children}) {
+      return <div className="message">{children}</div>
+    }
+
+    const hello = React.createElement(Greeting, {}, 'Hello Again')
+    const goodbye = React.createElement(Greeting, {}, 'Goodbye Again')
+
     const element = (
       <div className="container">
-        <div className="message">Hello World</div>
-        <div className="message">Goodbye World</div>
+        {Greeting({children: 'Hello World'})}
+        {hello}
+        <Greeting>Hello Once More</Greeting>
+        {Greeting({children: 'Goodbye World'})}
+        {goodbye}
+        <Greeting>Goodbye Once More</Greeting>
       </div>
     )
     // Just like in regular JavaScript, you often want to share code which you do
@@ -28,8 +39,13 @@
     //
     // This is only the first step to making actual React components. We'll do
     // the rest together.
+
+
     ReactDOM.render(element, document.getElementById('root'))
 
     // P.S. Please don't forget to ask me about React Fragments here!!
+
+    // <></> == <React.Fragment></React.Fragment>
+    //allows you to render multiple sibling elements at once
   </script>
 </body>
