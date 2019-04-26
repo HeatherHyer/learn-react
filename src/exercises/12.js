@@ -15,7 +15,10 @@ function UsernameForm({onSubmitUsername}) {
   // 💰 Make sure to accept the `event` as an argument and call
   // `event.preventDefault()` to prevent the default behavior of form submit
   // events (which refreshes the page).
-  //
+  function handleSubmit(event) {
+    event.preventDefault()
+    onSubmitUsername(event.target.elements.username.value)
+  }
   // 🦉 There are several ways to get the value of the name input:
   //
   //    Via their index:
@@ -36,9 +39,9 @@ function UsernameForm({onSubmitUsername}) {
   // 🐨 make sure to associate the label to the input by specifying an `id` on
   // the input and a matching value as an `htmlFor` prop on the label.
   return (
-    <form>
-      <label>Username:</label>
-      <input type="text" name="username" />
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="username">Username:</label>
+      <input id="username" type="text" name="username" />
       <button type="submit">Submit</button>
     </form>
   )

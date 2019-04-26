@@ -14,10 +14,14 @@ import React from 'react'
 function UsernameForm({onSubmitUsername, getErrorMessage}) {
   // 🐨 add some state (with React.useState) for the error.
   // 💰 initialize it to whatever comes back from `getErrorMessage('')`
-
+  const [error, setError] = React.useState(getErrorMessage(''))
   function handleSubmit(event) {
     event.preventDefault()
     onSubmitUsername(event.target.elements.username.value)
+  }
+
+  function handleChange(event) {
+    setError(getErrorMessage(event.target.value))
   }
 
   // 🐨 create a `handleChange` function that takes the value of the input and
@@ -35,11 +39,13 @@ function UsernameForm({onSubmitUsername, getErrorMessage}) {
         id="name-input"
         type="text"
         name="username"
+        onChange={handleChange}
         // 🐨 add your onChange handler here
       />
       {/* 🐨 if there's an error, then render it in a div here */}
+      <div style={{color: 'red'}}>{error}</div>
       {/* 🐨 add a disabled prop to this button that's set to true if there's an error */}
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={Boolean(error)}>Submit</button>
     </form>
   )
 }
