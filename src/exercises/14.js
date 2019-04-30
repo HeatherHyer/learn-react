@@ -36,12 +36,14 @@ function fancyFormReducer(state, action) {
     case 'COMMA_SEPARATED': {
       // 🐨 change this to handle the `action.value` from the comma-separated
       // input.
-      // 💰 `return getStateFromArray(arrayOfValues)`
+      const allVals = action.value.split(',')
+      return getStateFromArray(allVals)
       return state
     }
     case 'MULTILINE': {
       // 🐨 change this to handle the `action.value` from the multiline input.
-      // 💰 `return getStateFromArray(arrayOfValues)`
+      const allVals = action.value.split('\n')
+      return getStateFromArray(allVals)
       return state
     }
     case 'MULTISELECT': {
@@ -50,8 +52,8 @@ function fancyFormReducer(state, action) {
       // array of <option> DOM nodes. Each of those has a `value` property.
       // 💰 you can use `action.selectedOptions.map` to map over those options
       // and get your array of values.
-      // 💰 `return getStateFromArray(arrayOfValues)`
-      return state
+      const allVals = Array.from(action.selectedOptions).map(o => o.value)
+      return getStateFromArray(allVals)
     }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
@@ -68,7 +70,12 @@ function MyFancyForm() {
   //   commaSeparated: '' (for the <input />)
   //   multiline: '' (for the <textarea />)
   //   multiSelect: [] (for the <select />)
-  //
+  const [state, dispatch] = React.useReducer(fancyFormReducer, {
+    multiline: '',
+    commaSeparated: '',
+    multiSelect: [],
+  })
+  const {multiline, commaSeparated, multiSelect} = state
   // Now we need to add an onChange event handler for each of the form fields.
   // Each handler will be unique to the type of input we're using, but they
   // will all be pretty simple and just call dispatch with the information the
@@ -84,7 +91,11 @@ function MyFancyForm() {
           <input
             type="text"
             // 🐨 add a value prop for the commaSeparated state
+            value={commaSeparated}
             // 🐨 also add an onChange to call dispatch for COMMA_SEPARATED
+            onChange={event =>
+              dispatch({type: 'COMMA_SEPARATED', value: event.target.value})
+            }
           />
         </label>
       </div>
@@ -95,7 +106,11 @@ function MyFancyForm() {
           <textarea
             rows={availableOptions.length}
             // 🐨 add a value prop for the multiline state
+            value={multiline}
             // 🐨 also add an onChange to call dispatch for MULTILINE
+            onChange={event =>
+              dispatch({type: 'MULTILINE', value: event.target.value})
+            }
           />
         </label>
       </div>
@@ -107,7 +122,11 @@ function MyFancyForm() {
             multiple
             size={availableOptions.length}
             // 🐨 add a value prop for the state of the multiSelect
+            value="multiSelect"
             // 🐨 also add an onChange to call dispatch for MULTISELECT
+            onChange={event =>
+              dispatch({type: 'MULTISELECT', selectedOptions: event.target.selectedOptions})
+            }
           >
             {availableOptions.map(optionValue => (
               <option key={optionValue} value={optionValue}>

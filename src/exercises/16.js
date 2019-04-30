@@ -22,15 +22,26 @@ function fetchPokemonReducer(state, action) {
   switch (action.type) {
     case 'FETCHING': {
       // 🐨 return the state that should exist when fetching starts
-      return state
+      return {
+        ...state,
+        loading: true
+      }
     }
     case 'FETCHED': {
       // 🐨 return the state that should exist when the fetch request finishes
-      return state
+      return {
+        error: null,
+        loading: false,
+        pokemon: action.pokemon
+      }
     }
     case 'FETCH_ERROR': {
       // 🐨 return the state that should exist when the fetch request fails
-      return state
+      return {
+        ...state,
+        error: action.error,
+        loading: false
+      }
     }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
@@ -41,15 +52,28 @@ function FetchPokemon({pokemonName}) {
   // 🐨 Have state for the pokemon (null), the error state (null), and the
   // loading state (false). I recommend you use a reducer for this. I've given
   // you a starter reducer above because I love you.
+  const [state, dispatch] = React.useReducer(fetchPokemonReducer, {
+    pokemon: null,
+    loading: false,
+    error: null,
+  })
+  const {pokemon, loading, error} = state
   // 🐨 Use the `fetchPokemon` function below to fetch a pokemon by its name:
-  //   fetchPokemon('Pikachu').then(
-  //     pokemon => { /* call set state with the pokemon and loading: false */},
-  //     error => {/* call set state with the error loading: false */},
-  //   )
+    fetchPokemon({pokemonName}).then(
+      pokemon => dispatch({type: 'FETCHED', pokemon}),
+      error => dispatch({type: 'FETCH_ERROR', error}),
+    )
 
   // 🐨 use React.useEffect where the callback should be called whenever the
   // pokemon name changes.
   // 💰 DON'T FORGET THE DEPENDENCIES ARRAY!
+  React.useEffect(() => {
+    dispatch({type: 'FETCHING'})
+    fetchPokemon(pokemonName).then(
+      pokemon => dispatch({type: 'FETCHED', pokemon}),
+      error => dispatch({type: 'FETCH_ERROR', error}),
+    )
+  }, [pokemonName])
   // 🐨 before calling `fetchPokemon`, make sure to dispatch a FETCHING action
   // 🐨 when the promise resolves, dispatch FETCHED and send the pokemon
   // 🐨 if the promise rejects, dispatch a FETCH_ERROR and send the error
@@ -58,7 +82,13 @@ function FetchPokemon({pokemonName}) {
   //    1. loading: '...'
   //    2. error: 'ERROR!'
   //    3. pokemon: the JSON.stringified pokemon in a <pre></pre>
-  return 'todo'
+  return loading ? (
+    '...'
+  ) : error ? (
+    'ERROR (check your developer tools network tab)'
+  ) : (
+    <pre>{JSON.stringify(pokemon || 'Unknown', null, 2)}</pre>
+  )
 }
 
 /////////////////////////////////////////////////
