@@ -16,12 +16,17 @@ import React from 'react'
 
 function Counter({step = 1, initialCount = 0}) {
   // 🐨 initialize the state to the value from localStorage
-  // 💰 Number(window.localStorage.getItem('count') || initialCount)
-  const [count, setCount] = React.useState(initialCount)
+
+  const [count2, setCount] = React.useState(
+    Number(window.localStorage.getItem('count2') || initialCount)
+  )
   const increment = () => setCount(c => c + step)
   // 🐨 Here's where you'll use `React.useEffect`.
+  React.useEffect(() => {
+    window.localStorage.setItem('count2', count2)
+  })
   // The callback should set the `count` in localStorage.
-  return <button onClick={increment}>{count}</button>
+  return <button onClick={increment}>{count2}</button>
 }
 
 // Don't make changes to the Usage component. It's here to show you how your
